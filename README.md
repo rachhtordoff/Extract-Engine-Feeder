@@ -1,0 +1,10 @@
+maintained by Jacob Gathercole
+
+environment variables
+
+AWS_ACCESS_KEY
+AWS_SECRET_KEY
+SQS_QUEUE_NAME
+APP_NAME
+POLLING_INTERVAL
+SOLICITOR_DOC_CREATION_API_URL
