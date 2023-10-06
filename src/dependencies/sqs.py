@@ -6,18 +6,11 @@ from src.controllers.new_doc_sqs import NewDocSqs
 
 class SqsPoller(object):
     def __init__(self):
-        if config.LOCALSQS == "true":
-            self.sqs = boto3.resource('sqs',
-                            endpoint_url='http://sqs:9324',
-                            region_name='elasticmq',
-                            aws_secret_access_key=config.AWS_ACCESS_KEY,
-                            aws_access_key_id=config.AWS_SECRET_KEY,
-                            use_ssl=False)
-        else:
-            self.sqs = boto3.resource('sqs',
-                            region_name='eu-west-2',
-                            aws_access_key_id= config.AWS_ACCESS_KEY,
-                            aws_secret_access_key= config.AWS_SECRET_KEY)
+
+        self.sqs = boto3.resource('sqs',
+                        region_name='eu-west-2',
+                        aws_access_key_id= config.aws_access_key_id,
+                        aws_secret_access_key= config.aws_secret_access_key)
 
     def __open_sqs_connection(self):
         self.queue = self.sqs.get_queue_by_name(QueueName= config.SQS_QUEUE_NAME)

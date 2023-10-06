@@ -1,2 +1,9 @@
 requests==2.10.0
-boto3==1.0.0
+boto3
+Flask-JWT-Extended
+PyJWT
+beautifulsoup4
+Flask-Testing
+flake8
+blinker
+flask
