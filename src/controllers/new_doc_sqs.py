@@ -7,10 +7,8 @@ from src.dependencies.users_api import UserApi
 
 class NewDocSqs(object):
     def __init__(self, body):
-        print(body)
         if body['type'] == 'urls':
             scraped_websites = WebScraper().site_scrape(body['url_list'])
-            print(scraped_websites)
             new_dict = {
                 "scraped_websites": scraped_websites,
                 "phrases_list": body.get('phrases_list')
@@ -19,7 +17,14 @@ class NewDocSqs(object):
             if body.get('output_typeurl'):
                 if body['output_typeurl'] == 'CSV':
                     file_path = csv_generation.create_csv(extracted_data, 'urls')
-                    data = {'extracted_data': extracted_data}
-                    UserApi(body).post_document(file_path, body['id'], data)
+                    UserApi(body).post_document(file_path, body['id'])
+
+                    data = {
+                        'extracted_data': extracted_data,
+                        'output_document_name': os.path.basename(file_path)
+                    }
+
+                    UserApi(body).update_extraction(body['id'], data)
+
                     os.remove(file_path)
                     
