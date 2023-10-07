@@ -10,7 +10,7 @@ class NewDocSqs(object):
         print(body)
         if body['type'] == 'urls':
             scraped_websites = WebScraper().site_scrape(body['url_list'])
-
+            print(scraped_websites)
             new_dict = {
                 "scraped_websites": scraped_websites,
                 "phrases_list": body.get('phrases_list')
@@ -19,6 +19,7 @@ class NewDocSqs(object):
             if body.get('output_typeurl'):
                 if body['output_typeurl'] == 'CSV':
                     file_path = csv_generation.create_csv(extracted_data, 'urls')
-                    UserApi().upload_doc(file_path, body['id'])
+                    data = {'extracted_data': extracted_data}
+                    UserApi(body).post_document(file_path, body['id'], data)
                     os.remove(file_path)
                     

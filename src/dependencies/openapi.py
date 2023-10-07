@@ -1,6 +1,3 @@
-from flask import (
-    session,
-)
 import json
 from src import config
 import requests
@@ -11,8 +8,7 @@ class DataExtractor:
         self.base_url = config.openapi_api_url
         self.headers = {
             "Content-type": "application/json",
-            "Accept": "text/plain",
-            "Authorization": f"Bearer {session.get('access_token')}"
+            "Accept": "text/plain"
         }
 
     def _make_post_request(self, endpoint, data):
