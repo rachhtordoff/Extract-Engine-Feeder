@@ -4,11 +4,13 @@ from flask import (
 import json
 from src import config
 import requests
+import os
 
-class DataExtractor:
+
+class UserApi:
 
     def __init__(self):
-        self.base_url = config.openapi_api_url
+        self.base_url = config.user_api_url
         self.headers = {
             "Content-type": "application/json",
             "Accept": "text/plain",
@@ -20,10 +22,10 @@ class DataExtractor:
         response = requests.request("POST", url, data=json.dumps(data), headers=self.headers)
         return json.loads(response.text)
 
-    def extract_data_from_bank_statement(self, data):
-        endpoint = "extract_data_bank_statement"
-        return self._make_post_request(endpoint, data)
+    def post_document(self, filepath, folder_id):
+        endpoint = f"post_document/{folder_id}/{id}"
+        with open(filepath, 'rb') as f:
+            file=f.read()
+        filename = os.path.basename(filepath)
 
-    def extract_data_from_webscraped_urls(self, data):
-        endpoint = "extract_data_from_webscraped_urls"
-        return self._make_post_request(endpoint, data)
+        return self._make_post_request(endpoint, {'file_content':file, "file_name": filename})

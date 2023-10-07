@@ -8,6 +8,7 @@ openapi_api_url = os.environ['openapi_api_url']
 JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
 email_api_url = os.environ['email_api_url']
 POLLING_INTERVAL = int(os.environ['POLLING_INTERVAL'])
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 
 aws_access_key_id = os.environ['aws_access_key_id']
