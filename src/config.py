@@ -11,6 +11,10 @@ POLLING_INTERVAL = int(os.environ['POLLING_INTERVAL'])
 SECRET_KEY = os.environ["SECRET_KEY"]
 doc_location = os.environ["doc_location"]
 
+aws_access_key_id = os.environ['aws_access_key_id']
+aws_secret_access_key = os.environ['aws_secret_access_key']
+BUCKET_NAME = os.environ['BUCKET_NAME']
+BUCKET_ID = os.environ['BUCKET_ID']
 
 aws_access_key_id = os.environ['aws_access_key_id']
 aws_secret_access_key = os.environ['aws_secret_access_key']

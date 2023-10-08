@@ -29,6 +29,12 @@ class UserApi:
         response = requests.post(url, data=json.dumps(data), headers=self.headers)
         return json.loads(response.text)
 
+    def _make_get_request(self, endpoint, data):
+        url = f"{self.base_url}/{endpoint}"
+        response = requests.get(url, data=json.dumps(data), headers=self.headers)
+        return json.loads(response.text)
+
+
     def post_document(self, filepath, folder_id):
         endpoint = f"post_document/{folder_id}"
         with open(filepath, 'rb') as file:
@@ -38,3 +44,8 @@ class UserApi:
     def update_extraction(self, folder_id, data):
         endpoint = f"update_extraction/{folder_id}"
         return self._make_post_request(endpoint, data)
+
+    def get_document_extract(self, folder_id, data):
+        endpoint = f"update_extraction/{folder_id}"
+        return self._make_post_request(endpoint, data)
+

@@ -4,6 +4,8 @@ from src.utils.web_scrape import WebScraper
 from src.dependencies.openapi import DataExtractor
 from src.utils import csv_generation
 from src.dependencies.users_api import UserApi
+from src.utils.aws_s3 import AWSService
+
 
 class NewDocSqs(object):
     def __init__(self, body):
@@ -28,3 +30,5 @@ class NewDocSqs(object):
 
                     os.remove(file_path)
                     
+        elif body['type'] == 'file':
+            AWSService().download_file(body['id'], body['filename'])

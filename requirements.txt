@@ -7,3 +7,4 @@ Flask-Testing
 flake8
 blinker
 flask
+boto3
