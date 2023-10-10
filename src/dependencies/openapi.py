@@ -23,3 +23,7 @@ class DataExtractor:
     def extract_data_from_webscraped_urls(self, data):
         endpoint = "extract_data_from_webscraped_urls"
         return self._make_post_request(endpoint, data)
+
+    def extract_data_from_pdf(self, data):
+        endpoint = "extract_data_from_pdfs"
+        return self._make_post_request(endpoint, data)

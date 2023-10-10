@@ -26,9 +26,9 @@ def create_csv(data, doc_type):
 
     # Get the current date
     current_date = datetime.now().strftime("%d-%m-%Y")
-
+    print('doc_type')
     # Create the filename
-    filename = f"{config.doc_location}{doc_type}_webscrape_{current_date}.csv"
+    filename = f"{config.doc_location}{doc_type}_extract_{current_date}.csv"
 
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=headers)

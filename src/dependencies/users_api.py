@@ -47,5 +47,5 @@ class UserApi:
 
     def get_document_extract(self, folder_id, data):
         endpoint = f"update_extraction/{folder_id}"
-        return self._make_post_request(endpoint, data)
+        return self._make_get_request(endpoint, data)
 

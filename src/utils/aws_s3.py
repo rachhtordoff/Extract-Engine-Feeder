@@ -15,9 +15,7 @@ class AWSService:
 
     def download_file(self, folder_id, doc_name):
         bucket_name = f'{config.BUCKET_ID}'
-        doc_name = f'{config.BUCKET_NAME}/uploads/{folder_id}/{doc_name}'
-        print(bucket_name)
-        print(doc_name)
-        self.client.download_file(bucket_name, doc_name, config.doc_location)
-
-        return urls
+        newdoc_name = f'{config.BUCKET_NAME}/uploads/{folder_id}/{doc_name}'
+        print(f'{config.doc_location}/{doc_name}')
+        
+        self.client.download_file(bucket_name, newdoc_name, f'{config.doc_location}/{doc_name}')
