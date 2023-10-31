@@ -1,4 +1,4 @@
-import pdfplumber
+import PyPDF2
 from src import config
 
 
@@ -8,12 +8,15 @@ class PDFReader:
 
     def read_pdf(self, filename):
         try:
-            with pdfplumber.open(f"{config.doc_location}{filename}") as pdf:
-                # Concatenating text contents of all pages into a single string.
-                full_text = "\n".join([page.extract_text() for page in pdf.pages])
+            with open(filename, 'rb') as file:
+                reader = PyPDF2.PdfReader(file)
+                full_text = ""
+                for page_num in range(len(reader.pages)):
+                    page = reader.pages[page_num]
+                    full_text += page.extract_text() + "\n"
                 return full_text
         except FileNotFoundError:
-            print(f"File not found: {filename}")
+            print(f"File not found : {filename}")
             return None
         except PermissionError:
             print(f"No permission to read the file: {filename}")

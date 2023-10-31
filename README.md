@@ -1,4 +1,4 @@
-maintained by Jacob Gathercole
+maintained by Rachael Tordoff
 
 environment variables
 

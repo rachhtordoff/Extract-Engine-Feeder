@@ -16,9 +16,6 @@ aws_secret_access_key = os.environ['aws_secret_access_key']
 BUCKET_NAME = os.environ['BUCKET_NAME']
 BUCKET_ID = os.environ['BUCKET_ID']
 
-aws_access_key_id = os.environ['aws_access_key_id']
-aws_secret_access_key = os.environ['aws_secret_access_key']
-
 try:
     LOCALSQS = os.environ['LOCALSQS']
 except:
