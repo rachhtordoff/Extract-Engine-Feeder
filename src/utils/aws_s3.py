@@ -2,6 +2,7 @@
 import boto3
 from botocore.client import Config
 from src import config
+import os
 
 class AWSService:
     def __init__(self):
@@ -19,3 +20,23 @@ class AWSService:
         copy_doc_name = f'/opt/src/documents/{doc_name}'
         
         self.client.download_file(bucket_name, newdoc_name, copy_doc_name)
+
+    def get_folder_list(self, folder_id, doc_name):
+        folder_list = []
+        local_directory = f'/opt/src/documents/{doc_name}'
+
+        # Prefix to search in the bucket.
+        prefix = f'{config.BUCKET_NAME}/uploads/{folder_id}/{doc_name}'
+
+        # List objects within the bucket with the specified prefix.
+        response = self.client.list_objects_v2(Bucket=config.BUCKET_ID, Prefix=prefix)
+
+        # Check if any contents are found.
+        if 'Contents' in response:
+            for obj in response['Contents']:
+                key_suffix = obj['Key'][len(prefix):].lstrip('/')
+                if not os.path.basename(key_suffix).startswith('.'):
+                    trimmed_key = os.path.join(doc_name, key_suffix)
+                    folder_list.append(trimmed_key)
+
+        return folder_list

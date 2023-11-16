@@ -1,14 +1,12 @@
 import json
 import os
-import zipfile
-import time
 from src import config
 from src.utils import csv_generation
 from src.utils.pdf_reader import PDFReader
 from src.dependencies.openapi import DataExtractor
 from src.dependencies.users_api import UserApi
 from src.utils.aws_s3 import AWSService
-
+import shutil
 
 class NewDocSqs:
     def __init__(self, body):
@@ -31,18 +29,12 @@ class NewDocSqs:
 
     def process_files(self):
         _, file_extension = os.path.splitext(self.body['filename'])
-
-        # if file_extension.lower() == '.zip':
-        #     self.process_zip()
-        if file_extension.lower() == '.csv':
+        if file_extension.lower() == '.zip':
+            self.process_zip()
+        elif file_extension.lower() == '.csv':
             self.process_csv()
         elif file_extension.lower() == '.pdf':
             self.process_pdf()
-
-        # summary_doc = DataExtractor().create_summary_report(self.output_data)
-
-        # if os.path.exists(f"/opt/src/documents/{self.body['filename']}"):
-        #     os.remove(f"/opt/src/documents/{self.body['filename']}")
 
     def process_csv(self):
         extracted_list = []
@@ -68,33 +60,32 @@ class NewDocSqs:
             "phrases_list": self.body.get('phrases_list')
         }
         extracted_data =  DataExtractor().extract_data_from_pdf(new_data)
-        self.output_data(extracted_data, 'file name')
+        self.output_data(extracted_data, 'pdf')
 
+    def process_zip(self):
+        filename_without_ext = self.body['filename'].split('.')[0]
+        extract_location = f"/opt/src/documents/{filename_without_ext}"
 
-    # def process_zip(self):
-    #     filename_without_ext = self.body['filename'].split('.')[0]
-    #     extract_to = f"/opt/src/documents/{filename_without_ext}"
-    #     with zipfile.ZipFile(f"/opt/src/documents/{self.body['filename']}", 'r') as zip_ref:
-    #         zip_ref.extractall(extract_to)
+        folder = AWSService().get_folder_list(self.body['id'], filename_without_ext)
 
-    #     time.sleep(5)
+        extracted_data = []
+        for filename in folder:
+            new_data = {
+                'files': [{
+                    'folder_id': self.body['id'],
+                    'doc_name': filename
+                }],
+                "phrases_list": self.body.get('phrases_list')
+            }
+            extracted_data.extend(DataExtractor().extract_data_from_pdf(new_data))
 
-    #     extracted_data_list = []
-    #     for foldername, subfolders, filenames in os.walk(extract_to):
-    #         for filename in filenames:
-    #             file_path = os.path.join(foldername, filename)
-                
-    #             if filename.lower().endswith('.pdf'):
-    #                 extracted_data = self.process_pdf(file_path)
-    #             elif filename.lower().endswith('.csv'):
-    #                 extracted_data = self.process_csv(file_path)
-    #             extracted_data_list.append(extracted_data)
-    #     return extracted_data_list
+        if os.path.exists(extract_location):
+            os.remove(extract_location)
 
+        self.output_data(extracted_data, 'zip')
 
     def output_data(self, extracted_data, header):
         if self.body.get('output_typeurl') == 'CSV':
-            print(extracted_data)
             file_path = csv_generation.create_csv(extracted_data, header)
             UserApi(self.body).post_document(file_path, self.body['id'])
 
